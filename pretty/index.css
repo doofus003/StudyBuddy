@@ -1,0 +1,62 @@
+:root {
+    --primary-blue: #4a89dc;
+    --light-blue: #e6f0fa;
+    --dark-blue: #2a5a8a;
+}
+
+body {
+    background-color: var(--light-blue);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+    color: white;
+    padding: 5rem 0;
+    margin-bottom: 3rem;
+    border-radius: 0 0 20px 20px;
+}
+
+.btn-primary-custom {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    padding: 0.5rem 2rem;
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--dark-blue);
+    border-color: var(--dark-blue);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+}
+
+/* Navbar styles */
+.navbar {
+    background-color: var(--dark-blue) !important;
+}
+
+.navbar-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.smiley-icon {
+    font-size: 1.5rem;
+    color: white;
+    order: 2;
+}
+
+.navbar-brand-container {
+    order: 1;
+}
+
+/* Footer styles */
+footer {
+    background-color: var(--dark-blue);
+}

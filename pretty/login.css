@@ -1,0 +1,58 @@
+:root {
+    --primary-blue: #4a89dc;
+    --light-blue: #e6f0fa;
+    --dark-blue: #2a5a8a;
+}
+
+body {
+    background-color: var(--light-blue);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.login-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    margin: 0 auto;
+}
+
+.login-header {
+    color: var(--dark-blue);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.btn-login {
+    background-color: var(--primary-blue);
+    border: none;
+    width: 100%;
+    padding: 10px;
+}
+
+.btn-login:hover {
+    background-color: var(--dark-blue);
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.25rem rgba(74, 137, 220, 0.25);
+}
+
+.cancel-btn {
+    color: var(--primary-blue);
+    text-align: center;
+    display: block;
+    margin-top: 1rem;
+    text-decoration: none;
+}
+
+.cancel-btn:hover {
+    color: var(--dark-blue);
+    text-decoration: underline;
+}

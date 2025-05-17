@@ -1,0 +1,98 @@
+:root {
+    --primary-blue: #4a89dc;
+    --light-blue: #e6f0fa;
+    --dark-blue: #2a5a8a;
+    --sidebar-width: 250px;
+    --divider-color: #e0e0e0;
+}
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 56px;
+}
+
+.navbar-custom {
+    background-color: var(--dark-blue);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Centered search bar */
+.navbar .d-flex {
+    width: 50%;
+    max-width: 600px;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: white;
+    position: fixed;
+    height: calc(100vh - 56px);
+    top: 56px;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+}
+
+.nav-divider {
+    border-top: 1px solid var(--divider-color);
+    margin: 0.5rem 0;
+}
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 20px;
+    margin-top: 56px;
+}
+
+/* Calendar styling */
+#calendar {
+    font-size: 0.85rem;
+}
+
+.fc-event {
+    font-size: 0.8rem;
+    padding: 2px 4px;
+}
+
+/* Other existing styles remain the same */
+
+/* Improve FullCalendar Header Toolbar */
+.fc-header-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.fc-toolbar-chunk {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Calendar area padding */
+#calendar {
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Ensure calendar buttons have space */
+.fc-button {
+    padding: 6px 10px !important;
+    font-size: 0.9rem !important;
+}
+
+/* Slightly larger events */
+.fc-event {
+    font-size: 0.9rem;
+    padding: 4px 6px;
+}

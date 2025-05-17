@@ -1,0 +1,64 @@
+:root {
+    --primary-blue: #4a89dc;
+    --light-blue: #e6f0fa;
+    --dark-blue: #2a5a8a;
+}
+
+body {
+    background-color: var(--light-blue);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.signup-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    margin: 0 auto;
+}
+
+.signup-header {
+    color: var(--dark-blue);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.btn-signup {
+    background-color: var(--primary-blue);
+    border: none;
+    width: 100%;
+    padding: 10px;
+    margin-top: 1rem;
+}
+
+.btn-signup:hover {
+    background-color: var(--dark-blue);
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.25rem rgba(74, 137, 220, 0.25);
+}
+
+.cancel-btn {
+    color: var(--primary-blue);
+    text-align: center;
+    display: block;
+    margin-top: 1rem;
+    text-decoration: none;
+}
+
+.cancel-btn:hover {
+    color: var(--dark-blue);
+    text-decoration: underline;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
