@@ -3,7 +3,8 @@ session_start();
 include('../db.php');
 
 // Get current user data
-$current_user = $_SESSION['user'] ?? 'Guest';
+echo $_SESSION['username'];
+$current_user = $_SESSION['username'] ?? 'Guest';
 $user_query = "SELECT * FROM users WHERE Fname = '$current_user'";
 $user_result = mysqli_query($conn, $user_query);
 $user_data = mysqli_fetch_assoc($user_result);

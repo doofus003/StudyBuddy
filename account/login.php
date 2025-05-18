@@ -11,6 +11,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($result) {
         $count = mysqli_num_rows($result);
         if(mysqli_num_rows($result) > 0) {
+            $_SESSION["username"] = $username;
             header("Location: home.php");
             exit;
         } else {
