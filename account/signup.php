@@ -3,7 +3,7 @@ include '../db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
-    $username = $_POST['username'];  // Changed from name to username
+    $username = $_POST['username'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
@@ -14,7 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $count = mysqli_num_rows($result);
         if($count == 0) {
             if($password == $confirm_password) {
-                $sql = "INSERT INTO `users` (`id`, `email`, `passwd`, `Fname`) VALUES (3, '$email', '$password', '$username')";
+                // Remove hardcoded ID - let DB auto-increment
+                $sql = "INSERT INTO users (email, passwd, Fname) VALUES ('$email', '$password', '$username')";
                 $insert_result = mysqli_query($conn, $sql);
 
                 if ($insert_result) {
@@ -38,11 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudyBuddy - Sign Up</title>
-    
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../pretty/signup.css">
 </head>
 <body>
@@ -86,9 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
     function validation() {
         var email = document.f2.email.value;
