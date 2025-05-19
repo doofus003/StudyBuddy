@@ -69,7 +69,7 @@ CREATE TABLE `users` (
   `Fname` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `passwd` varchar(255) DEFAULT NULL,
-  `satus` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   `isadmin` tinyint(1) DEFAULT NULL,
   `grade` varchar(255) DEFAULT NULL,
   `major` varchar(255) DEFAULT NULL,
