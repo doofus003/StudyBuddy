@@ -1,5 +1,4 @@
 <?php
-// Only start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -7,9 +6,7 @@ include '../db.php';
 $current_user = $_SESSION['username'] ?? null;
 $user_id = $_SESSION['user_id'] ?? null;
 
-// Main Content
 if (!isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
-    // Try to fetch user_id from the database if only username is set
     $user_query = "SELECT id FROM users WHERE Fname = '" . mysqli_real_escape_string($conn, $_SESSION['username']) . "'";
     $user_result = mysqli_query($conn, $user_query);
     if ($user_result && $row = mysqli_fetch_assoc($user_result)) {
@@ -41,14 +38,12 @@ if ($user_id) {
         <p class="text-muted">No courses found. Add some to get started!</p>
     <?php endif;
 } else {
-    // If user is logged in but user_id is still not set, try to fetch and set it
     if (isset($_SESSION['username'])) {
         $user_query = "SELECT id FROM users WHERE Fname = '" . mysqli_real_escape_string($conn, $_SESSION['username']) . "'";
         $user_result = mysqli_query($conn, $user_query);
         if ($user_result && $row = mysqli_fetch_assoc($user_result)) {
             $_SESSION['user_id'] = $row['id'];
             $user_id = $row['id'];
-            // After setting user_id, reload the page to continue
             echo "<script>location.reload();</script>";
             exit;
         }

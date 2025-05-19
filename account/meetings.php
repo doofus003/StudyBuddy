@@ -10,16 +10,13 @@ $user_query = "SELECT * FROM users WHERE Fname = '" . mysqli_real_escape_string(
 $user_result = mysqli_query($conn, $user_query);
 $user_data = mysqli_fetch_assoc($user_result);
 
-// Handle create meeting
 if (isset($_POST['create_meeting'])) {
     $title = trim($_POST['meeting_title']);
     $description = trim($_POST['meeting_description']);
     $meeting_date = $_POST['meeting_date'];
     $meeting_time = $_POST['meeting_time'];
-    $meeting_link = trim($_POST['meeting_link']); // User must provide a valid link
-    // Normalize link: remove spaces
+    $meeting_link = trim($_POST['meeting_link']);
     $meeting_link = preg_replace('/\s+/', '', $meeting_link);
-    // Validate meeting link (Google Meet, Zoom, Jitsi)
     $valid_link = false;
     if (preg_match('/^(https?:\/\/)?(meet\.google\.com|zoom\.us|jitsi\.org|meet\.jit\.si)/i', $meeting_link)) {
         $valid_link = true;
@@ -33,7 +30,7 @@ if (isset($_POST['create_meeting'])) {
         }
         $stmt = $conn->prepare("INSERT INTO meetings (user_id, title, description, meeting_date, meeting_link, participants) VALUES (?, ?, ?, ?, ?, ?)");
         $date_time = $meeting_date . ' ' . $meeting_time;
-        $participants = $current_user; // creator is always a participant
+        $participants = $current_user;
         $stmt->bind_param("isssss", $user_data['id'], $title, $description, $date_time, $meeting_link, $participants);
         if ($stmt->execute()) {
             echo "<div class='alert alert-success position-fixed top-0 start-50 translate-middle-x mt-3' style='z-index:2000; min-width:300px;'>Meeting created! Share the link: <a href='".htmlspecialchars($meeting_link,ENT_QUOTES)."' target='_blank'>Join Link</a><button type='button' class='btn-close float-end' data-bs-dismiss='alert'></button></div>\n";
@@ -44,7 +41,6 @@ if (isset($_POST['create_meeting'])) {
         }
     }
 }
-// Handle join meeting by code
 if (isset($_POST['join_meeting']) && isset($_POST['meeting_code'])) {
     $meeting_code = trim($_POST['meeting_code']);
     $meeting_code = preg_replace('/\s+/', '', strtolower($meeting_code)); // Normalize input
@@ -55,7 +51,6 @@ if (isset($_POST['join_meeting']) && isset($_POST['meeting_code'])) {
     $stmt->execute();
     $stmt->bind_result($meeting_link, $participants, $meeting_id);
     if ($stmt->fetch()) {
-        // Add user to participants if not already
         if (strpos($participants, $current_user) === false) {
             $participants .= ',' . $current_user;
             $update = $conn->prepare("UPDATE meetings SET participants=? WHERE id=?");
@@ -68,7 +63,6 @@ if (isset($_POST['join_meeting']) && isset($_POST['meeting_code'])) {
         echo "<script>window.scrollTo({top:0,behavior:'smooth'});</script>";
     }
 }
-// Handle delete meeting
 if (isset($_POST['delete_meeting']) && isset($_POST['delete_meeting_id'])) {
     $meeting_id = intval($_POST['delete_meeting_id']);
     $stmt = $conn->prepare("DELETE FROM meetings WHERE id = ? AND user_id = ?");
@@ -93,7 +87,6 @@ if (isset($_POST['delete_meeting']) && isset($_POST['delete_meeting_id'])) {
     <link rel="stylesheet" href="../pretty/home.css">
 </head>
 <body>
-    <!-- Navigation Bar (copied from home.php) -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
             <div class="navbar-brand-container">
@@ -114,7 +107,6 @@ if (isset($_POST['delete_meeting']) && isset($_POST['delete_meeting_id'])) {
             </ul>
         </div>
     </nav>
-    <!-- Sidebar (copied from home.php) -->
     <div class="sidebar">
         <div class="text-center mb-4">
             <h5><?php echo htmlspecialchars($user_data['Fname'] ?? $current_user); ?></h5>

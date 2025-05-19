@@ -7,14 +7,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // Check if email already exists
     $sql = "SELECT * FROM users WHERE email = '$email'";
     $result = mysqli_query($conn, $sql);
     if($result) {
         $count = mysqli_num_rows($result);
         if($count == 0) {
             if($password == $confirm_password) {
-                // Remove hardcoded ID - let DB auto-increment
+
                 $sql = "INSERT INTO users (email, passwd, Fname) VALUES ('$email', '$password', '$username')";
                 $insert_result = mysqli_query($conn, $sql);
 

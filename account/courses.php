@@ -1,5 +1,4 @@
 <?php
-// Only start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -18,7 +17,6 @@ $user_id = $_SESSION['user_id'] ?? null;
     <link rel="stylesheet" href="../pretty/home.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
             <div class="navbar-brand-container">
@@ -39,7 +37,6 @@ $user_id = $_SESSION['user_id'] ?? null;
             </ul>
         </div>
     </nav>
-    <!-- Sidebar -->
     <div class="sidebar">
         <div class="text-center mb-4">
             <h5><?php echo htmlspecialchars($current_user); ?></h5>
@@ -71,11 +68,8 @@ $user_id = $_SESSION['user_id'] ?? null;
         
         </ul>
     </div>
-    <!-- End Sidebar -->
-    <!-- Main Content -->
     <div class="main-content">
         <?php
-        // Main Content
         if ($user_id) {
             $courses_query = "SELECT * FROM courses WHERE user_id = '$user_id' LIMIT 3";
             $courses_result = mysqli_query($conn, $courses_query);
@@ -103,12 +97,11 @@ $user_id = $_SESSION['user_id'] ?? null;
             echo "<p class='text-muted'>Please login to view your courses</p>";
         }
 
-        // Handle course upload
         if (isset($_POST['upload_course']) && isset($_FILES['course_pdf']) && $user_id) {
             $title = trim($_POST['title']);
             $subject = trim($_POST['subject']);
             $description = trim($_POST['description']);
-            $visibility = 1; // public for now
+            $visibility = 1;
             $file = $_FILES['course_pdf'];
             $upload_dir = '../uploads/';
             $file_name = uniqid('course_', true) . '_' . basename($file['name']);
@@ -125,7 +118,6 @@ $user_id = $_SESSION['user_id'] ?? null;
             }
         }
         ?>
-        <!-- Upload Course Form -->
         <?php if ($user_id): ?>
         <div class="card mb-4">
             <div class="card-body">
@@ -149,7 +141,6 @@ $user_id = $_SESSION['user_id'] ?? null;
         </div>
         <?php endif; ?>
 
-        <!-- List All Courses -->
         <div class="mb-4">
             <h5>All Courses</h5>
             <div class="row">
@@ -168,13 +159,11 @@ $user_id = $_SESSION['user_id'] ?? null;
                                 <i class="bi bi-file-earmark-pdf"></i> Download PDF
                             </a>
                             <?php if ($user_id == $course['user_id']): ?>
-                                <!-- Edit button triggers modal -->
                                 <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editCourseModal<?= $course['id'] ?>">Edit</button>
                                 <form method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this course?');">
                                     <input type="hidden" name="delete_course_id" value="<?= $course['id'] ?>">
                                     <button type="submit" name="delete_course" class="btn btn-outline-danger btn-sm">Delete</button>
                                 </form>
-                                <!-- Edit Modal -->
                                 <div class="modal fade" id="editCourseModal<?= $course['id'] ?>" tabindex="-1" aria-labelledby="editCourseModalLabel<?= $course['id'] ?>" aria-hidden="true">
                                   <div class="modal-dialog">
                                     <div class="modal-content">
@@ -213,7 +202,6 @@ $user_id = $_SESSION['user_id'] ?? null;
             </div>
         </div>
         <?php
-        // Handle delete course
         if (isset($_POST['delete_course']) && isset($_POST['delete_course_id'])) {
             $course_id = intval($_POST['delete_course_id']);
             $stmt = $conn->prepare("DELETE FROM courses WHERE id = ? AND user_id = ?");
@@ -226,7 +214,6 @@ $user_id = $_SESSION['user_id'] ?? null;
                 echo "<script>window.scrollTo({top:0,behavior:'smooth'});</script>";
             }
         }
-        // Handle update course
         if (isset($_POST['update_course']) && isset($_POST['edit_course_id'])) {
             $course_id = intval($_POST['edit_course_id']);
             $title = trim($_POST['edit_title']);

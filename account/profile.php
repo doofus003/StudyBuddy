@@ -9,7 +9,6 @@ if (!isset($_SESSION['username'])) {
 
 $user_name = $_SESSION['username'];
 
-// Fetch user data
 $query = $conn->prepare("SELECT Fname, email, grade, major, city, status FROM users WHERE Fname = ?");
 $query->bind_param("s", $user_name);
 $query->execute();
@@ -23,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $major = trim($_POST['major']);
     $city  = trim($_POST['city']);
 
-    // Update user data
+ 
     $update = $conn->prepare("UPDATE users SET Fname=?, email=?, grade=?, major=?, city=? WHERE Fname=?");
     $update->bind_param("ssssss", $fname, $email, $grade, $major, $city, $user_name);
 
@@ -133,13 +132,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <!-- Navigation Bar (copied from home.php) -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
             <div class="navbar-brand-container">
                 <a class="navbar-brand" href="../index.php">StudyBuddy</a>
             </div>
-            <!-- Searchbar removed -->
+        
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
@@ -156,10 +154,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </nav>
 
-    <!-- Sidebar (copied from home.php) -->
     <div class="sidebar">
         <div class="text-center mb-4">
-            <!-- Profile image removed -->
             <h5><?php echo htmlspecialchars($user['Fname']); ?></h5>
         </div>
         <ul class="nav flex-column">
@@ -190,7 +186,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </ul>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <div class="profile-card mt-5">
             <h2 class="profile-title">My Profile</h2>

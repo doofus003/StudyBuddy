@@ -1,11 +1,9 @@
 <?php
-// study_groups.php
 session_start();
 include '../db.php';
 $user_id = $_SESSION['user_id'] ?? null;
 $current_user = $_SESSION['username'] ?? null;
 
-// Helper: show alert and scroll to top
 function show_alert($msg, $type = 'success') {
     echo "<div class='alert alert-$type alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3' role='alert' style='z-index:2000; min-width:300px;'>"
         . $msg .
@@ -13,7 +11,6 @@ function show_alert($msg, $type = 'success') {
     echo "<script>window.scrollTo({top:0,behavior:'smooth'});</script>";
 }
 
-// Fetch user data for sidebar/profile
 if ($current_user) {
     $user_query = $conn->prepare("SELECT * FROM users WHERE Fname = ?");
     $user_query->bind_param("s", $current_user);
@@ -21,7 +18,6 @@ if ($current_user) {
     $user_data = $user_query->get_result()->fetch_assoc();
 }
 
-// Handle create group
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_group'])) {
     $title = trim($_POST['title']);
     $description = trim($_POST['description']);
@@ -36,10 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_group'])) {
     }
 }
 
-// Handle join group
 if (isset($_POST['join_group']) && isset($_POST['group_id'])) {
     $group_id = intval($_POST['group_id']);
-    // Prevent duplicate join
+
     $check = $conn->prepare("SELECT id FROM study_group_members WHERE group_id = ? AND user_id = ?");
     $check->bind_param("ii", $group_id, $user_id);
     $check->execute();
@@ -57,10 +52,8 @@ if (isset($_POST['join_group']) && isset($_POST['group_id'])) {
     }
 }
 
-// Handle delete group
 if (isset($_POST['delete_group']) && isset($_POST['group_id'])) {
     $group_id = intval($_POST['group_id']);
-    // Only allow if current user is the creator
     $stmt = $conn->prepare("DELETE FROM study_groups WHERE id = ? AND creator_id = ?");
     $stmt->bind_param("ii", $group_id, $user_id);
     if ($stmt->execute() && $stmt->affected_rows > 0) {
@@ -70,14 +63,13 @@ if (isset($_POST['delete_group']) && isset($_POST['group_id'])) {
     }
 }
 
-// Handle update group
 if (isset($_POST['update_group']) && isset($_POST['group_id'])) {
     $group_id = intval($_POST['group_id']);
     $title = trim($_POST['title']);
     $description = trim($_POST['description']);
     $group_date = $_POST['group_date'];
     $group_time = $_POST['group_time'];
-    // Only allow if current user is the creator
+
     $stmt = $conn->prepare("UPDATE study_groups SET title=?, description=?, group_date=?, group_time=? WHERE id=? AND creator_id=?");
     $stmt->bind_param("ssssii", $title, $description, $group_date, $group_time, $group_id, $user_id);
     if ($stmt->execute() && $stmt->affected_rows > 0) {
@@ -98,7 +90,7 @@ if (isset($_POST['update_group']) && isset($_POST['group_id'])) {
     <link rel="stylesheet" href="../pretty/home.css">
 </head>
 <body>
-    <!-- Navigation Bar (copied from home.php) -->
+    
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
             <div class="navbar-brand-container">
@@ -119,7 +111,7 @@ if (isset($_POST['update_group']) && isset($_POST['group_id'])) {
             </ul>
         </div>
     </nav>
-    <!-- Sidebar (copied from home.php) -->
+
     <div class="sidebar">
         <div class="text-center mb-4">
             <h5><?php echo htmlspecialchars($user_data['Fname'] ?? $current_user); ?></h5>
@@ -152,11 +144,10 @@ if (isset($_POST['update_group']) && isset($_POST['group_id'])) {
           
         </ul>
     </div>
-    <!-- End Sidebar -->
-    <!-- Main Content -->
+    
     <div class="main-content">
         <h2>Study Groups</h2>
-        <!-- Create Group Form -->
+
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title">Create a Study Group</h5>
@@ -177,7 +168,7 @@ if (isset($_POST['update_group']) && isset($_POST['group_id'])) {
                 </form>
             </div>
         </div>
-        <!-- List All Groups -->
+        
         <h5>All Study Groups</h5>
         <?php
         $query = "SELECT g.*, COUNT(m.id) AS member_count FROM study_groups g LEFT JOIN study_group_members m ON g.id = m.group_id GROUP BY g.id ORDER BY g.group_date, g.group_time";
@@ -194,13 +185,13 @@ if (isset($_POST['update_group']) && isset($_POST['group_id'])) {
                         <button type="submit" name="join_group" class="btn btn-outline-primary btn-sm">Join</button>
                     </form>
                     <?php if ($row['creator_id'] == $user_id): ?>
-                        <!-- Edit button triggers modal -->
+                        
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editGroupModal<?= $row['id'] ?>">Edit</button>
                         <form method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this group?');">
                             <input type="hidden" name="group_id" value="<?= $row['id'] ?>">
                             <button type="submit" name="delete_group" class="btn btn-outline-danger btn-sm">Delete</button>
                         </form>
-                        <!-- Edit Modal -->
+                       
                         <div class="modal fade" id="editGroupModal<?= $row['id'] ?>" tabindex="-1" aria-labelledby="editGroupModalLabel<?= $row['id'] ?>" aria-hidden="true">
                           <div class="modal-dialog">
                             <div class="modal-content">
@@ -236,7 +227,7 @@ if (isset($_POST['update_group']) && isset($_POST['group_id'])) {
                 </div>
             </div>
         <?php endwhile; ?>
-        <!-- List Groups User Has Joined -->
+
         <h5 class="mt-4">Groups You Joined</h5>
         <?php
         $stmt = $conn->prepare("SELECT g.* FROM study_groups g INNER JOIN study_group_members m ON g.id = m.group_id WHERE m.user_id = ? ORDER BY g.group_date, g.group_time");

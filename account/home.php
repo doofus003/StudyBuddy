@@ -2,7 +2,6 @@
 session_start();
 include('../db.php');
 
-// Get current user data
 $current_user = $_SESSION['username'] ?? null;
 if (!$current_user) {
     header('Location: login.php');
@@ -12,7 +11,6 @@ $user_query = "SELECT * FROM users WHERE Fname = '" . mysqli_real_escape_string(
 $user_result = mysqli_query($conn, $user_query);
 $user_data = mysqli_fetch_assoc($user_result);
 
-// Handle account deletion
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
     $delete_query = "DELETE FROM users WHERE Fname = '" . mysqli_real_escape_string($conn, $current_user) . "'";
     if (mysqli_query($conn, $delete_query)) {
@@ -36,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
     <link rel="stylesheet" href="../pretty/home.css">
 </head>
 <body style="background: #f4f7fa !important;">
-    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
             <div class="navbar-brand-container">
@@ -59,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
         </div>
     </nav>
 
-    <!-- Sidebar -->
     <div class="sidebar">
         <div class="text-center mb-4">
             <h5><?php echo htmlspecialchars($current_user); ?></h5>
@@ -90,16 +86,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
             </li>
         </ul>
     </div>
-    <!-- End Sidebar -->
 
-    <!-- Main Content -->
     <div class="main-content" style="padding: 2rem 1rem;">
         <?php if(isset($error)): ?>
             <div class="alert alert-danger"><?php echo $error; ?></div>
         <?php endif; ?>
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10">
-                <!-- Welcome Section -->
                 <div class="profile-card mb-4 p-4 text-center bg-gradient" style="background: linear-gradient(90deg, #6a82fb 0%, #fc5c7d 100%) !important; color: #fff !important; border-radius: 1rem;">
                     <h2 class="fw-bold mb-2">Welcome back, <?php echo htmlspecialchars($current_user); ?>!</h2>
                     <p class="lead mb-4">Ready to make the most of your study journey today?</p>
@@ -109,7 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
                         <a href="courses.php" class="btn btn-outline-light btn-lg shadow-sm"><i class="bi bi-journal-bookmark"></i> Courses</a>
                     </div>
                 </div>
-                <!-- Quick Stats Section -->
                 <div class="row mb-4 g-3 justify-content-center">
                     <div class="col-12 col-sm-6 col-md-4">
                         <div class="card text-center shadow-sm h-100" style="border-radius: 1rem;">
@@ -160,7 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
                         </div>
                     </div>
                 </div>
-                <!-- My Courses Section -->
                 <div class="meet-section" style="background: #fff !important; border-radius: 1rem !important; box-shadow: 0 2px 8px rgba(44, 62, 80, 0.07); padding: 2rem 1.5rem;">
                     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                         <h4 class="mb-0"><i class="bi bi-journal-bookmark"></i> My Courses</h4>
@@ -170,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
                     </div>
                     <div class="row g-3">
                         <?php 
-                        // Render courses as cards with title, download, and delete/edit if owner
+                    
                         if (function_exists('render_courses_content')) {
                             render_courses_content();
                         } else {
@@ -182,13 +173,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
             </div>
         </div>
     </div>
-    <!-- Include Modals -->
+
     <?php include('modals.php'); ?>
     <?php if(function_exists('renderDeleteAccountModal')) renderDeleteAccountModal(); ?>
-    <!-- JavaScript Files -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Delete Account Confirmation
         document.querySelectorAll('form[method="POST"]').forEach(function(form) {
             form.addEventListener('submit', function(e) {
                 if(e.submitter && e.submitter.name === 'delete_account') {
