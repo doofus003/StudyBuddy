@@ -6,18 +6,40 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['user'];
     $password = $_POST['pass'];
 
-    $sql = "select * from users where Fname = '$username' and passwd = '$password'";
-    $result = mysqli_query($conn, $sql);
+    // Debugging: Check if session is active
+    error_log("Session status: " . session_status());
+
+    // Use prepared statements for security
+    $stmt = $conn->prepare("SELECT * FROM users WHERE Fname = ? AND passwd = ?");
+    $stmt->bind_param("ss", $username, $password);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
     if($result) {
-        $count = mysqli_num_rows($result);
-        if(mysqli_num_rows($result) > 0) {
+        if($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
             $_SESSION["username"] = $username;
-            header("Location: home.php");
+            $_SESSION["isadmin"] = $user['isadmin']; // Store isadmin in session
+
+            // Debugging: Log the isadmin value and redirection
+            error_log("isadmin value: " . $user['isadmin']);
+            error_log("Redirecting to: " . ($user['isadmin'] == 1 ? "../admin/home.php" : "home.php"));
+
+            // Redirect based on isadmin attribute
+            if($user['isadmin'] == 1) {
+                header("Location: ../admin/home.php");
+            } else {
+                header("Location: home.php");
+            }
             exit;
         } else {
             $error = "Invalid username or password";
+            error_log($error); // Debugging: Log invalid login
         }
+    } else {
+        error_log("Database query failed"); // Debugging: Log query failure
     }
+    $stmt->close();
 }
 ?>
 
@@ -25,7 +47,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" width="device-width, initial-scale=1.0">
     <title>StudyBuddy - Login</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
