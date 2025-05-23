@@ -7,6 +7,22 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['isadmin']) || $_SESSION['
     header('Location: ../account/login.php');
     exit();
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['delete_course']) && isset($_POST['delete_course_id'])) {
+        $course_id = intval($_POST['delete_course_id']);
+        $stmt = $conn->prepare("DELETE FROM courses WHERE id = ?");
+        $stmt->bind_param("i", $course_id);
+
+        if ($stmt->execute() && $stmt->affected_rows > 0) {
+            $_SESSION['message'] = "<div class='alert alert-success position-fixed top-0 start-50 translate-middle-x mt-3' style='z-index:2000; min-width:300px;'>Course deleted successfully.<button type='button' class='btn-close float-end' data-bs-dismiss='alert'></button></div>\n";
+        } else {
+            $_SESSION['message'] = "<div class='alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3' style='z-index:2000; min-width:300px;'>Failed to delete course.<button type='button' class='btn-close' data-bs-dismiss='alert'></button></div>\n";
+        }
+        header('Location: courses.php');
+        exit();
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +34,12 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['isadmin']) || $_SESSION['
 </head>
 <body>
     <?php include('header_sidebar.php'); ?>
+    <?php
+    if (isset($_SESSION['message'])) {
+        echo $_SESSION['message'];
+        unset($_SESSION['message']);
+    }
+    ?>
     <!-- Main Content -->
     <div class="p-4" style="flex-grow: 1;">
         <h1>Manage Courses</h1>
@@ -46,8 +68,12 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['isadmin']) || $_SESSION['
                     echo "<td>" . $row['description'] . "</td>";
                     echo "<td>" . $row['subject'] . "</td>";
                     echo "<td>";
-                    echo "<button class='btn btn-warning btn-sm' data-bs-toggle='modal' data-bs-target='#editCourseModal' data-id='" . $row['id'] . "'>Edit</button> ";
-                    echo "<button class='btn btn-danger btn-sm' onclick='deleteCourse(" . $row['id'] . ")'>Delete</button>";
+                    echo "<a href='download.php?file=" . urlencode($row['file_path']) . "' class='btn btn-primary btn-sm'>Download PDF</a> ";
+                    echo "<form method='POST' style='display:inline;' onsubmit='return confirm(\"Are you sure you want to delete this course?\");'>";
+                    echo "<input type='hidden' name='delete_course' value='1'>";
+                    echo "<input type='hidden' name='delete_course_id' value='" . $row['id'] . "'>";
+                    echo "<button type='submit' class='btn btn-danger btn-sm'>Delete</button>";
+                    echo "</form>";
                     echo "</td>";
                     echo "</tr>";
                 }
@@ -56,32 +82,6 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['isadmin']) || $_SESSION['
                 ?>
             </tbody>
         </table>
-
-        <!-- Edit Course Modal (Placeholder) -->
-        <div class="modal fade" id="editCourseModal" tabindex="-1" aria-labelledby="editCourseModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editCourseModalLabel">Edit Course</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Feature under construction.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-
-    <script>
-    function deleteCourse(id) {
-        if (confirm('Are you sure you want to delete this course?')) {
-            window.location.href = 'delete_course.php?id=' + id;
-        }
-    }
-    </script>
 </body>
 </html>

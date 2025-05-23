@@ -97,5 +97,5 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['isadmin']) || $_SESSION['
                 <a class="nav-link" href="meetings.php">Manage Meetings</a>
             </li>
         </ul>
-    </div> <!-- Close sidebar div -->
-    <div class="content"> <!-- Ensure content div starts here -->
+    </div>
+    <div class="content">
